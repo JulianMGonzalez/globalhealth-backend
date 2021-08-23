@@ -27,16 +27,16 @@ module.exports = {
                 });
 
                 if (rol) {
-                    const foundRol = await roles.find({ name: { $in: rol } })
-                    newUser.rol = foundRol.map(rol => rol._id)
+                    const foundRol = await roles.findOne({ name: { $in: rol } })
+                    newUser.rol = foundRol._id
                 } else {
                     const role = await roles.findOne({ name: 'Paciente' })
-                    newUser.rol = [role._id]
+                    newUser.rol = role._id
                 }
 
                 const savedUser = await newUser.save()
-                
-                res.status(200).json({mensaje: 'Registro exitoso'})
+
+                res.status(200).json({ mensaje: 'Registro exitoso' })
             }
         } catch (error) {
             res.status(500).send({ //500 error con el servidor
@@ -57,17 +57,17 @@ module.exports = {
             const { email, password } = req.body
 
             const userFound = await usuarioSchema.findOne({ email }).populate("rol")
-            
-            if(!userFound) return res.status(400).json({mensaje: 'Usuario no registrado'})
-            
-            const matchPassword =  await usuarioSchema.comparePassword(password, userFound.password)
-            if(!matchPassword) return res.status(401).json({mensaje: 'contraseña incorrecta'})
+
+            if (!userFound) return res.status(400).json({ mensaje: 'Usuario no registrado' })
+
+            const matchPassword = await usuarioSchema.comparePassword(password, userFound.password)
+            if (!matchPassword) return res.status(401).json({ mensaje: 'contraseña incorrecta' })
 
             const token = jwt.sign({ id: userFound._id }, config.SECRET, {
                 expiresIn: 86400 //24 horas
             })
-            res.json({token})
-            
+            res.json({ token })
+
         } catch (e) {
             res.status(500).send({
                 message: 'Ocurrió un error'
@@ -77,21 +77,15 @@ module.exports = {
     },
     list: async (req, res, next) => {
         try {
-            const { rol } = req.body
-            if (rol === 'Admin') {
-                const list = await usuarioSchema.find()
-                if (list) {
-                    res.status(200).json(list);
-                } else {
-                    res.status(404).send({//404: usuario no encontrado
-                        message: 'usuarios no registrados'
-                    })
-                }
+            const list = await usuarioSchema.find()
+            if (list) {
+                res.status(200).json(list);
             } else {
-                res.status(401).send({//404: usuario no encontrado
-                    message: 'usuario sin permisos'
+                res.status(404).send({//404: usuario no encontrado
+                    message: 'usuarios no registrados'
                 })
             }
+
 
         } catch (error) {
             res.status(500).send({ //500 error con el servidor
@@ -102,7 +96,6 @@ module.exports = {
     },
     update: async (req, res, next) => {
         try {
-
             const updateUser = await usuarioSchema.findByIdAndUpdate(req.params.id, { $set: req.body })
             if (updateUser) {
                 res.status(200).json(updateUser);

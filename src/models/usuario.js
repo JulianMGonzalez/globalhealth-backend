@@ -5,7 +5,6 @@ const usuarioSchema = new Schema(
     {
         name: {
             type: String,
-            unique: true,
             required: true
         },
         email: {
@@ -21,7 +20,7 @@ const usuarioSchema = new Schema(
             type: String,
             required: true
         },
-        telefono: {
+        phone: {
             type: Number
         },
         avatar: {
