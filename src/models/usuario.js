@@ -5,12 +5,14 @@ const usuarioSchema = new Schema(
     {
         name: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
         email: {
             type: String,
             unique: true,
-            required: true
+            required: true,
+            trim: true
         },
         rol: {
             type: Schema.ObjectId,
@@ -18,7 +20,8 @@ const usuarioSchema = new Schema(
         },
         password: {
             type: String,
-            required: true
+            required: true,
+            trim: true
         },
         phone: {
             type: Number

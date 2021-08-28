@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/usuario'
 import Rol from '../models/roles'
-import config from '../config'
+import { SECRET } from '../config'
 
 module.exports = {
     verifyToken: async (req, res, next) => {
@@ -12,7 +12,7 @@ module.exports = {
                     message: 'No token'
                 });
             }
-            const decoded = jwt.verify(token, config.SECRET)
+            const decoded = jwt.verify(token, SECRET)
             req.userId = decoded.id
 
             const user = await User.findById(req.userId, { password: 0 })
@@ -54,7 +54,6 @@ module.exports = {
     verifyAdministrador: async (req, res, next) => {
         const user = await User.findById(req.userId)
         const roles = await Rol.find({ _id: { $in: user.rol } })
-
         for (const property of roles) {
             if (property.name === 'Admin') {
                 next()

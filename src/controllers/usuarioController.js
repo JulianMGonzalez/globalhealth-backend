@@ -1,7 +1,7 @@
 import usuarioSchema from '../models/usuario'
 import roles from '../models/roles'
 import jwt from 'jsonwebtoken'
-import config from '../config'
+import {SECRET} from '../config'
 import validateRegisterInput from '../validation/register'
 import validateLoginInput from '../validation/login'
 
@@ -63,7 +63,7 @@ module.exports = {
             const matchPassword = await usuarioSchema.comparePassword(password, userFound.password)
             if (!matchPassword) return res.status(401).json({ mensaje: 'contraseña incorrecta' })
 
-            const token = jwt.sign({ id: userFound._id }, config.SECRET, {
+            const token = jwt.sign({ id: userFound._id }, SECRET, {
                 expiresIn: 86400 //24 horas
             })
             res.json({ token })
