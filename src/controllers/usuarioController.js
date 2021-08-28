@@ -1,7 +1,7 @@
 import usuarioSchema from '../models/usuario'
 import roles from '../models/roles'
 import jwt from 'jsonwebtoken'
-import {SECRET} from '../config'
+import { SECRET } from '../config'
 import validateRegisterInput from '../validation/register'
 import validateLoginInput from '../validation/login'
 
@@ -94,6 +94,14 @@ module.exports = {
             next(error);
         }
     },
+    profile: async (req, res) => {
+        const user = await usuarioSchema.findOne({ _id: req.userId }).select('-password')
+
+        if (!user) return res.status(401).json({ message: 'El usuario no existe' })
+
+        res.json(user)
+    },
+
     update: async (req, res, next) => {
         try {
             const updateUser = await usuarioSchema.findByIdAndUpdate(req.params.id, { $set: req.body })
