@@ -2,6 +2,7 @@ import usuarioSchema from '../models/usuario'
 import roles from '../models/roles'
 import jwt from 'jsonwebtoken'
 import { SECRET } from '../config'
+import createError from "http-errors";
 import validateRegisterInput from '../validation/register'
 import validateLoginInput from '../validation/login'
 
@@ -12,13 +13,13 @@ module.exports = {
             const { errors, isValid } = validateRegisterInput(req.body);
             // Check validation
             if (!isValid) {
-                return res.status(400).json(errors);
+                return next(createError.BadRequest(errors))
             }
             const { name, email, password, rol } = req.body
 
             const register = await usuarioSchema.findOne({ email })
             if (register) {
-                return res.status(400).json({ email: "Email ya existe" });
+                return next(createError.Conflict('El usuario no existe'))
             } else {
                 const newUser = new usuarioSchema({
                     name,
@@ -45,23 +46,24 @@ module.exports = {
             next(error);
         }
     },
-    login: async (req, res) => {
+    login: async (req, res, next) => {
         try {
             // Form validation
             const { errors, isValid } = validateLoginInput(req.body);
             // Check validation
             if (!isValid) {
-                return res.status(400).json(errors);
+                return next(createError.BadRequest(errors))
             }
 
             const { email, password } = req.body
 
             const userFound = await usuarioSchema.findOne({ email }).populate("rol")
 
-            if (!userFound) return res.status(400).json({ mensaje: 'Usuario no registrado' })
+            if (!userFound) return next(createError.Unauthorized('El usuario no existe'))
 
             const matchPassword = await usuarioSchema.comparePassword(password, userFound.password)
-            if (!matchPassword) return res.status(401).json({ mensaje: 'contraseña incorrecta' })
+
+            if (!matchPassword) return next(createError.Unauthorized('La contraseña es incorrecta'))
 
             const token = jwt.sign({ id: userFound._id }, SECRET, {
                 expiresIn: 86400 //24 horas
