@@ -5,7 +5,7 @@ import { MONGOURL } from '../config'
     const db = await connect(MONGOURL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useFindAndModify: true,
+        useFindAndModify: false,
         useCreateIndex: true
 
     })

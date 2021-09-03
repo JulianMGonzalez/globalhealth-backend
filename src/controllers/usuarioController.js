@@ -5,6 +5,7 @@ import { SECRET } from '../config'
 import createError from "http-errors";
 import validateRegisterInput from '../validation/register'
 import validateLoginInput from '../validation/login'
+import { uploadImage } from "../helpers/cloudinary";
 
 module.exports = {
     add: async (req, res, next) => {
@@ -106,7 +107,10 @@ module.exports = {
 
     update: async (req, res, next) => {
         try {
-            const updateUser = await usuarioSchema.findByIdAndUpdate(req.params.id, { $set: req.body })
+            const infoUpdate = req.body
+            const avatar = await uploadImage(req.files.avatar.tempFilePath)
+            const updateUser = await usuarioSchema.findByIdAndUpdate(req.params.id, { $set: {...infoUpdate, avatar} })
+            
             if (updateUser) {
                 res.status(200).json(updateUser);
             } else {

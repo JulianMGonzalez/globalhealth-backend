@@ -1,6 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
+import fileUpload from "express-fileupload";
+
 import auth from './libs/initialSetup'
 import { PORT } from "./config";
 import './config/mongoose'
@@ -15,6 +17,10 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/"
+}))
 
 //routes
 app.use('/api', router)

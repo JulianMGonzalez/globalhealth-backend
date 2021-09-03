@@ -27,8 +27,7 @@ const usuarioSchema = new Schema(
             type: Number
         },
         avatar: {
-            type: String,
-            default: 'http://assets.stickpng.com/images/585e4beacb11b227491c3399.png'
+            url: String
         }
     },
     {
