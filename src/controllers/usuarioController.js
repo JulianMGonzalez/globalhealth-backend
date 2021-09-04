@@ -58,7 +58,7 @@ module.exports = {
 
             const { email, password } = req.body
 
-            const userFound = await usuarioSchema.findOne({ email }).populate("rol")
+            const userFound = await usuarioSchema.findOne({ email })
 
             if (!userFound) return next(createError.Unauthorized('El usuario no existe'))
 
@@ -98,8 +98,7 @@ module.exports = {
         }
     },
     profile: async (req, res) => {
-        const user = await usuarioSchema.findOne({ _id: req.userId }).select('-password')
-
+        const user = await usuarioSchema.findOne({ _id: req.userId }).select('-password -createdAt -updatedAt').populate("rol")
         if (!user) return res.status(401).json({ message: 'El usuario no existe' })
 
         res.json(user)
@@ -112,13 +111,13 @@ module.exports = {
             if (req.files) {
                 const avatar = await uploadImage(req.files.avatar.tempFilePath)
                 updateUser = await usuarioSchema.findByIdAndUpdate(req.params.id, { $set: { ...infoUpdate, avatar } })
-                
+
             } else {
                 updateUser = await usuarioSchema.findByIdAndUpdate(req.params.id, { $set: infoUpdate })
-            }   
+            }
             if (!updateUser) return createError.NotFound('El usuario no existe')
 
-            res.status(200).json(updateUser)
+            res.json({updateUser})
 
 
         } catch (e) {

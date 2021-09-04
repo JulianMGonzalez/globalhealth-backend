@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router()
-const usuarioRouter = require('./usuario');
+const usuarioRouter = require('./usuarioRoutes');
 
 
 router.use('/usuario', usuarioRouter);
