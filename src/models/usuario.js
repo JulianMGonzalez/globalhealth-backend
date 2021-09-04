@@ -23,6 +23,13 @@ const usuarioSchema = new Schema(
             required: true,
             trim: true
         },
+        birth: {
+            type: Date
+        },
+        gender: {
+            type: String,
+            enum: ["Masculino", "Femenino", "No binario"]
+        },
         phone: {
             type: Number
         },

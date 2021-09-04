@@ -11,7 +11,7 @@ cloudinary.config({
 export const uploadImage = async(file) => {
     try {
         const result = await cloudinary.uploader.upload(file)
-        return result
+        return result.url
     } catch (error) {
         console.log(error)
     }

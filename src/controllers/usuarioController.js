@@ -108,14 +108,18 @@ module.exports = {
     update: async (req, res, next) => {
         try {
             const infoUpdate = req.body
-            const avatar = await uploadImage(req.files.avatar.tempFilePath)
-            const updateUser = await usuarioSchema.findByIdAndUpdate(req.params.id, { $set: {...infoUpdate, avatar} })
-            
-            if (updateUser) {
-                res.status(200).json(updateUser);
+            let updateUser
+            if (req.files) {
+                const avatar = await uploadImage(req.files.avatar.tempFilePath)
+                updateUser = await usuarioSchema.findByIdAndUpdate(req.params.id, { $set: { ...infoUpdate, avatar } })
+                
             } else {
-                res.status(404).json(updateUser)
-            }
+                updateUser = await usuarioSchema.findByIdAndUpdate(req.params.id, { $set: infoUpdate })
+            }   
+            if (!updateUser) return createError.NotFound('El usuario no existe')
+
+            res.status(200).json(updateUser)
+
 
         } catch (e) {
             res.status(500).send({
