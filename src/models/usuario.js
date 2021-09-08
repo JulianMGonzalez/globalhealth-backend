@@ -35,7 +35,11 @@ const usuarioSchema = new Schema(
         },
         avatar: {
             url: String
-        }
+        },
+        historyClinical: [{
+            type: Schema.Types.ObjectId,
+            ref: 'MedicalHistory'
+        }]
     },
     {
         timestamps: true,

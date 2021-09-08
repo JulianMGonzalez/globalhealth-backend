@@ -98,7 +98,7 @@ module.exports = {
         }
     },
     profile: async (req, res) => {
-        const user = await usuarioSchema.findOne({ _id: req.userId }).select('-password -createdAt -updatedAt').populate("rol")
+        const user = await usuarioSchema.findOne({ _id: req.userId }).select('-password -createdAt -updatedAt').populate("rol historyClinical")
         if (!user) return res.status(401).json({ message: 'El usuario no existe' })
 
         res.json(user)
