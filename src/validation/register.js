@@ -16,7 +16,7 @@ module.exports = function validateRegisterInput(data) {
     if (Validator.isEmpty(data.email)) {
         errors.email = "Email es requerido";
     } else if (!Validator.isEmail(data.email)) {
-        errors.email = "Email es invalido";
+        errors.email = "Email invalido";
     }
     // Password checks
     if (Validator.isEmpty(data.password)) {
@@ -29,7 +29,7 @@ module.exports = function validateRegisterInput(data) {
         errors.password = "La contraseña tiene que superar los 8 caracteres";
     }
     if (!Validator.equals(data.password, data.password2)) {
-        errors.password2 = "La contraseña es larga";
+        errors.password2 = "Las contraseñas no coinciden";
     }
     return {
         errors,

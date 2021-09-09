@@ -20,7 +20,7 @@ module.exports = {
 
             const register = await usuarioSchema.findOne({ email })
             if (register) {
-                return next(createError.Conflict('El usuario no existe'))
+                return next(createError.Conflict('El correo ya ha sido registrado'))
             } else {
                 const newUser = new usuarioSchema({
                     name,
