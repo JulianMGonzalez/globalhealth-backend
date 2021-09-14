@@ -80,7 +80,17 @@ module.exports = {
     },
     list: async (req, res, next) => {
         try {
-            const list = await usuarioSchema.find()
+            let list
+            if (req.body.rol === '612ec9b331c4b43e40099643') {
+                list = await usuarioSchema.find({
+                    $or: [
+                        { rol: '612ec9b331c4b43e40099642' },
+                        { rol: '612ec9b331c4b43e40099644' }
+                    ]
+                })
+            } else {
+                list = await usuarioSchema.find({ rol: '612ec9b331c4b43e40099642' })
+            }
             if (list) {
                 res.status(200).json(list);
             } else {
@@ -117,7 +127,7 @@ module.exports = {
             }
             if (!updateUser) return createError.NotFound('El usuario no existe')
 
-            res.json({updateUser})
+            res.json({ updateUser })
 
 
         } catch (e) {

@@ -4,7 +4,7 @@ import usuarioController from '../controllers/usuarioController'
 import verifyMiddleware from '../middlewares/authJwt'
 
 
-router.get('/list', [verifyMiddleware.verifyToken, verifyMiddleware.verifyAdministrador], usuarioController.list)
+router.post('/list', [verifyMiddleware.verifyToken, verifyMiddleware.verifyDoctor], usuarioController.list)
 router.get('/profile', [verifyMiddleware.verifyToken, verifyMiddleware.verifyPaciente], usuarioController.profile)
 router.post('/register', usuarioController.add)
 router.post('/login', usuarioController.login)
