@@ -6,6 +6,7 @@ import verifyMiddleware from '../middlewares/authJwt'
 
 router.post('/list', [verifyMiddleware.verifyToken, verifyMiddleware.verifyDoctor], usuarioController.list)
 router.get('/profile', [verifyMiddleware.verifyToken, verifyMiddleware.verifyPaciente], usuarioController.profile)
+router.get('/list/:id', [verifyMiddleware.verifyToken, verifyMiddleware.verifyDoctor], usuarioController.userDetail)
 router.post('/register', usuarioController.add)
 router.post('/login', usuarioController.login)
 router.put('/update/:id', [verifyMiddleware.verifyToken, verifyMiddleware.verifyPaciente], usuarioController.update)

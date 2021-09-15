@@ -36,6 +36,10 @@ const usuarioSchema = new Schema(
         avatar: {
             url: String
         },
+        state: {
+            type: Boolean,
+            default: true
+        },
         historyClinical: [{
             type: Schema.Types.ObjectId,
             ref: 'MedicalHistory'

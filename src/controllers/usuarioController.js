@@ -113,7 +113,23 @@ module.exports = {
 
         res.json(user)
     },
-
+    userDetail: async (req, res, next) => {
+        try {
+            const userFound = await usuarioSchema.findById(req.params.id).populate('historyClinical')
+            if (userFound) {
+                res.status(200).json(userFound);
+            } else {
+                res.status(404).send({//404: usuario no encontrado
+                    message: 'usuario no encontrado'
+                })
+            }
+        } catch (error) {
+            res.status(500).send({
+                message: 'Ocurrió un error'
+            });
+            next(error);
+        }
+    },
     update: async (req, res, next) => {
         try {
             const infoUpdate = req.body
